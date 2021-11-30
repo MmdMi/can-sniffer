@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CAN sniffer esp-idf with esp32
 
 <h3>What You Need</h3>
@@ -15,3 +16,6 @@
 <li>Build tools - CMake and Ninja to build a full Application for ESP32</li>
 <li>ESP-IDF that essentially contains API (software libraries and source code) for ESP32 and scripts to operate the Toolchain</li>
 </ul>
+=======
+# Can sniffer esp-idf with esp32
+>>>>>>> 5244ee125a3d20351ada582c1561f731afe7e14f
