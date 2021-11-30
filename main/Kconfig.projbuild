@@ -1,0 +1,20 @@
+menu "CAN Sniffer"
+        choice CAN_PINS
+            prompt "CAN pins"
+            help
+                set can bus tx rx pin
+            config CAN_TX
+                int "CAN TX"
+                range 0 39
+                default 5
+                help
+                    0-39
+                    
+            config CAN_RX
+                int "CAN RX"
+                range 0 39
+                default 4
+                help
+                   0-39
+        endchoice
+endmenu
