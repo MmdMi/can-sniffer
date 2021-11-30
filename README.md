@@ -9,7 +9,7 @@
 <li>USB cable - USB A / micro USB B</li>
 <li>Computer running Windows, Linux, or macOS</li>
 </ul>
-  <b>Software<b>
+  <b>Software</b>
 <ul>
 <li>Toolchain to compile code for ESP32</li>
 <li>Build tools - CMake and Ninja to build a full Application for ESP32</li>
