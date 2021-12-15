@@ -1,28 +1,13 @@
-/* Hello World Example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is  on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
 #include <stdio.h>
-#include "driver/gpio.h"
-#include "hal/gpio_types.h"
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include <string.h>
 #include "esp_system.h"
 #include "esp_log.h"
-#include "driver/uart.h"
-#include <string.h>
-
-#include "driver/gpio.h"
-#include "driver/can.h"
-
-#include "esp_tls.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "soc/timer_group_struct.h"
 #include "soc/timer_group_reg.h"
+#include "driver/can.h"
+#include "sdkconfig.h"
 
 enum StateCodes
 {
@@ -120,8 +105,6 @@ enum ReturnCodes init_can_125()
     can_general_config_t g_config = CAN_GENERAL_CONFIG_DEFAULT(CONFIG_CAN_TX, CONFIG_CAN_RX, CAN_MODE_NORMAL);
     can_timing_config_t t_config = TWAI_TIMING_CONFIG_125KBITS();
     can_filter_config_t f_config = CAN_FILTER_CONFIG_ACCEPT_ALL();
-    // can_filter_config_t f_config = {.acceptance_code = 0x348 << 21, .acceptance_mask = ~(CAN_STD_ID_MASK << 21), .single_filter = true};
-    // can_filter_config_t f_config = {.acceptance_code = 0, .acceptance_mask = 0x6ff , .single_filter = false};
 
     // Install CAN driver
     if (can_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -157,8 +140,6 @@ enum ReturnCodes init_can_250()
     can_general_config_t g_config = CAN_GENERAL_CONFIG_DEFAULT(CONFIG_CAN_TX, CONFIG_CAN_RX, CAN_MODE_NORMAL);
     can_timing_config_t t_config = TWAI_TIMING_CONFIG_250KBITS();
     can_filter_config_t f_config = CAN_FILTER_CONFIG_ACCEPT_ALL();
-    // can_filter_config_t f_config = {.acceptance_code = 0x348 << 21, .acceptance_mask = ~(CAN_STD_ID_MASK << 21), .single_filter = true};
-    // can_filter_config_t f_config = {.acceptance_code = 0, .acceptance_mask = 0x6ff , .single_filter = false};
 
     // Install CAN driver
     if (can_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -194,8 +175,6 @@ enum ReturnCodes init_can_500()
     can_general_config_t g_config = CAN_GENERAL_CONFIG_DEFAULT(CONFIG_CAN_TX, CONFIG_CAN_RX, CAN_MODE_NORMAL);
     can_timing_config_t t_config = CAN_TIMING_CONFIG_500KBITS();
     can_filter_config_t f_config = CAN_FILTER_CONFIG_ACCEPT_ALL();
-    // can_filter_config_t f_config = {.acceptance_code = 0x348 << 21, .acceptance_mask = ~(CAN_STD_ID_MASK << 21), .single_filter = true};
-    // can_filter_config_t f_config = {.acceptance_code = 0, .acceptance_mask = 0x6ff , .single_filter = false};
 
     // Install CAN driver
     if (can_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -231,8 +210,6 @@ enum ReturnCodes init_can_1000()
     can_general_config_t g_config = CAN_GENERAL_CONFIG_DEFAULT(CONFIG_CAN_TX, CONFIG_CAN_RX, CAN_MODE_NORMAL);
     can_timing_config_t t_config = TWAI_TIMING_CONFIG_1MBITS();
     can_filter_config_t f_config = CAN_FILTER_CONFIG_ACCEPT_ALL();
-    // can_filter_config_t f_config = {.acceptance_code = 0x348 << 21, .acceptance_mask = ~(CAN_STD_ID_MASK << 21), .single_filter = true};
-    // can_filter_config_t f_config = {.acceptance_code = 0, .acceptance_mask = 0x6ff , .single_filter = false};
 
     // Install CAN driver
     if (can_driver_install(&g_config, &t_config, &f_config) == ESP_OK)
@@ -268,17 +245,16 @@ enum ReturnCodes read_can()
     {
         return fail;
     }
+
     printf("%x,", message.identifier);
-    if (!(message.flags & CAN_MSG_FLAG_RTR))
+    for (int i = 0; i < message.data_length_code; i++)
     {
-        for (int i = 0; i < message.data_length_code; i++)
-        {
-            if (message.data[i] < 0x10)
-                printf("0");
-            printf("%x", message.data[i]);
-        }
-        printf("\n");
+        if (message.data[i] < 0x10)
+            printf("0");
+        printf("%x", message.data[i]);
     }
+    printf("\n");
+
     return ok;
 }
 
