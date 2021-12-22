@@ -91,8 +91,23 @@ int (*state[])(void) = {
     read_can,
     deinit_can};
 
+esp_err_t gpioConfig(int gpio_num, int mode, int pullup, int pulldown)
+{
+    gpio_config_t gpio_conf;
+    gpio_conf.intr_type = GPIO_INTR_DISABLE;
+    gpio_conf.mode = mode;
+    gpio_conf.pin_bit_mask = (1ULL << gpio_num);
+    gpio_conf.pull_down_en = pulldown;
+    gpio_conf.pull_up_en = pullup;
+    esp_err_t err = gpio_config(&gpio_conf);
+    return err;
+}
+
 void app_main(void)
 {
+    gpioConfig(GPIO_NUM_2,GPIO_MODE_OUTPUT,0,0);
+    gpio_set_level(GPIO_NUM_2,1);
+    
     while (1)
     {
         StateFunc = state[cs];
